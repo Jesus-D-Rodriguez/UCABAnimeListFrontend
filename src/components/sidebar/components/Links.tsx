@@ -71,7 +71,7 @@ export function SidebarLinks(props: {
 											me='auto'
 											color={activeRoute(route.path.toLowerCase()) ? activeColor : inactiveColor}
 											fontWeight={activeRoute(route.path.toLowerCase()) ? 'bold' : 'normal'}>
-											{route.name}
+											{route.name} 
 										</Text>
 										<Box h='36px' w='4px' bg='brand.400' borderRadius='5px' />
 									</HStack>

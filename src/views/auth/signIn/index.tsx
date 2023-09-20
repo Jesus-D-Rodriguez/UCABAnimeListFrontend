@@ -21,8 +21,9 @@
 
 */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 // Chakra imports
 import {
   Box,
@@ -50,6 +51,80 @@ import { RiEyeCloseLine } from "react-icons/ri";
 
 function SignIn() {
   // Chakra color mode
+
+  const [postData, setPostData] = useState({ email: 'jdrch62@gmail.com', password: '123456' });
+
+  const [token, setToken] = useState([])
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setPostData({
+      ...postData,
+      [name]: value,
+    });
+  };
+
+  axios.post('http://localhost:3000/api/v1/auth/login', postData)
+  .then((response) => {
+    setToken(response.data.token);
+    console.log('Respuesta: ', response.data.token );
+  })
+  .catch((error) => {
+    console.log('Error: ', error);
+  });
+
+
+
+
+
+
+
+  const handleSignIn = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/v1/auth/login',
+        postData // Los datos de inicio de sesión que has recopilado del formulario
+      );
+  
+      // Si la solicitud es exitosa, actualiza el estado con la respuesta del servidor
+     // setLoginResponse(response.data);
+  
+      // También puedes realizar alguna acción adicional aquí, como redirigir al usuario a otra página
+    } catch (error) {
+      // Si la solicitud falla, maneja el error y establece el mensaje de error en el estado
+     // setError('Error de inicio de sesión. Verifica tus credenciales.');
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [data, setData] = useState<any[]>([]);
+  useEffect(()=>{
+    axios.get("http://localhost:3000/api/v1/users",  {
+      headers: {
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpkcmNoNjJAZ21haWwuY29tIiwiaWQiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NTI0NDk2NiwiZXhwIjoxNjk3OTIzMzY2fQ.PRpdafzmdviiv0QQn2Gsn5QsNA76iYvulLIVCdnUrME', 
+      },
+      }).
+    then(response => {
+      setData(response.data);
+      console.log(response.data);
+    }).catch((error) =>{
+      console.log('Error es: ',error)
+    })
+
+  }, []);
+
+
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
@@ -207,7 +282,8 @@ function SignIn() {
               fontWeight='500'
               w='100%'
               h='50'
-              mb='24px'>
+              mb='24px' 
+              onClick={handleSignIn}>
               Sign In
             </Button>
           </FormControl>
